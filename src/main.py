@@ -25,11 +25,8 @@ except ValueError:
     service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
     service_account_info = json.loads(service_account_json)
 
-    # Write to a temporary file (Render does not support JSON files directly)
-    with open("firebase-key.json", "w") as f:
-        json.dump(service_account_info, f)
-
-    cred = credentials.Certificate("firebase-key.json")
+    # ✅ Initialize using the parsed dict directly
+    cred = credentials.Certificate(service_account_info)
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
