@@ -17,15 +17,16 @@ load_dotenv()
 FIREBASE_API_KEY = os.getenv("FIREBASE_API_KEY")
 FIREBASE_AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts"
 
+
 # === Firebase Admin Setup (for DB) ===
 try:
-    app = firebase_admin.get_app()
+    firebase_admin.get_app()
 except ValueError:
-    # Load JSON string from environment variable
+    # Load JSON string from env and parse it
     service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
-    service_account_info = json.loads(service_account_json)
+    service_account_info = json.loads(service_account_json)  # ✅ This is a dict
 
-    # ✅ Initialize using the parsed dict directly
+    # ✅ Use dict directly — not string or path
     cred = credentials.Certificate(service_account_info)
     firebase_admin.initialize_app(cred)
 
