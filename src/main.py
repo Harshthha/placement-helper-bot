@@ -18,16 +18,19 @@ FIREBASE_API_KEY = os.getenv("FIREBASE_API_KEY")
 FIREBASE_AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts"
 
 
-# === Firebase Admin Setup (for DB) ===
+# === Firebase Admin Setup ===
 try:
     firebase_admin.get_app()
 except ValueError:
-    # Load JSON string from env and parse it
+    # 1. Get the raw JSON string from the environment variable
     service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
-    service_account_info = json.loads(service_account_json)  # ✅ This is a dict
 
-    # ✅ Use dict directly — not string or path
+    # 2. Parse it into a dictionary
+    service_account_info = json.loads(service_account_json)
+
+    # 3. Pass the dict directly to credentials.Certificate
     cred = credentials.Certificate(service_account_info)
+
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
