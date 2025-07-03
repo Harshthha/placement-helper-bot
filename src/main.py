@@ -21,8 +21,9 @@ FIREBASE_AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts"
 try:
     app = firebase_admin.get_app()
 except ValueError:
-    cred = credentials.Certificate("firebase_admin_key.json")
+    cred = credentials.Certificate("/etc/secrets/firebase_admin_key.json")
     firebase_admin.initialize_app(cred)
+
 db = firestore.client()
 
 # === Gemini API ===
