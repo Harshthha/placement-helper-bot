@@ -21,7 +21,15 @@ FIREBASE_AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts"
 try:
     app = firebase_admin.get_app()
 except ValueError:
-    cred = credentials.Certificate("/etc/secrets/firebase_admin_key.json")
+    # Load JSON string from environment variable
+    service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
+    service_account_info = json.loads(service_account_json)
+
+    # Write to a temporary file (Render does not support JSON files directly)
+    with open("firebase-key.json", "w") as f:
+        json.dump(service_account_info, f)
+
+    cred = credentials.Certificate("firebase-key.json")
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
